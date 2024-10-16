@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const { Schema, model } = require("mongoose");
 
-
 const userSchema = new Schema(
   {
     email: {
@@ -39,10 +38,12 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    wishlistedItems: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
+    wishlistedItems: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
