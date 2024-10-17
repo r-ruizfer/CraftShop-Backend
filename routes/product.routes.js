@@ -5,7 +5,7 @@ const Product = require("../models/Product.model");
 
 //Create a single product
 
-router.post("/", verifyToken, verifyAdmin, async (req, res) => {
+router.post("/", verifyToken, verifyAdmin, async (req, res, next) => {
   try {
     const response = await Product.create({
       ...req.body,
@@ -17,7 +17,7 @@ router.post("/", verifyToken, verifyAdmin, async (req, res) => {
 });
 
 //Return all products
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   Product.find()
     .then((products) => {
       res.status(202).json(products);
@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
     });
 });
 // Return a single product
-router.get("/:productId", async (req, res) => {
+router.get("/:productId", async (req, res, next) => {
   try {
     const response = await Product.findById(req.params.productId);
     res.status(202).json(response);
@@ -39,7 +39,7 @@ router.get("/:productId", async (req, res) => {
 
 // Update details of a single product
 
-router.put("/:productId", verifyToken, verifyAdmin, async (req, res) => {
+router.put("/:productId", verifyToken, verifyAdmin, async (req, res, next) => {
   try {
     const response = await Product.findByIdAndUpdate(
       req.params.productId,
@@ -55,7 +55,7 @@ router.put("/:productId", verifyToken, verifyAdmin, async (req, res) => {
 });
 
 //Delete a single product
-router.delete("/:productId", verifyToken, verifyAdmin, async (req, res) => {
+router.delete("/:productId", verifyToken, verifyAdmin, async (req, res, next) => {
   try {
     await Product.findByIdAndDelete(req.params.productId);
     res.status(200).send();
