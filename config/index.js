@@ -6,7 +6,7 @@ const cors = require("cors");
 function configs (app){
   app.use(
     cors({
-      origin: ["http://localhost:5174"],
+      origin: ["http://localhost:5173"],
     })
   );
   // ...
