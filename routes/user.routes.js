@@ -31,7 +31,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.userId);
+    await User.findByIdAndDelete(req.params.id);
     res.status(200).send();
   } catch (error) {
     next(error);
