@@ -27,6 +27,19 @@ router.get("/", (req, res, next) => {
       next(error);
     });
 });
+
+// return by title
+router.get("/search", async (req, res, next) => {
+  try {
+    console.log(req.query);
+    const response = await Product.find({
+      title: { $regex: req.query.title, $options: "i" },
+    });
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+});
 // Return a single product
 router.get("/:productId", async (req, res, next) => {
   try {
@@ -55,13 +68,18 @@ router.put("/:productId", verifyToken, verifyAdmin, async (req, res, next) => {
 });
 
 //Delete a single product
-router.delete("/:productId", verifyToken, verifyAdmin, async (req, res, next) => {
-  try {
-    await Product.findByIdAndDelete(req.params.productId);
-    res.status(200).send();
-  } catch (error) {
-    next(error);
+router.delete(
+  "/:productId",
+  verifyToken,
+  verifyAdmin,
+  async (req, res, next) => {
+    try {
+      await Product.findByIdAndDelete(req.params.productId);
+      res.status(200).send();
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;
