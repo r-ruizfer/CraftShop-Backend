@@ -17,7 +17,7 @@ router.get("/:id", verifyToken, async (req, res, next) => {
 router.patch("/:id", verifyToken, async (req, res) => {
   try {
     const response = await User.findByIdAndUpdate(
-      req.params.userId,
+      req.params.id,
       {
         ...req.body,
       },
