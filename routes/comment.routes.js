@@ -26,7 +26,7 @@ router.delete("/:commentId", verifyToken, verifyAdmin, async (req, res, next) =>
 });
 router.get("/products/:productId", async (req, res, next) => {
   try {
-    const response = await Comment.find({ product: req.params.productId });
+    const response = await Comment.find({ product: req.params.productId }).populate("user")
     res.send(response);
   } catch (error) {
     next(error);
