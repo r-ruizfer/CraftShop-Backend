@@ -8,7 +8,8 @@ const { verifyToken, verifyAdmin } = require("../middlewares/auth.middlewares");
 // POST "/api/auth/signup" => recibe credenciales de usuario y lo crea en la DB
 router.post("/signup", async (req, res, next) => {
   console.log(req.body);
-  const { email, password, username } = req.body;
+  const { email, password, username, firstName, lastName, address, image } =
+    req.body;
 
   if (!email || !password || !username) {
     res.status(400).json({ message: "All fields are required" });
@@ -35,6 +36,10 @@ router.post("/signup", async (req, res, next) => {
       email,
       password: hashPassword,
       username,
+      firstName,
+      lastName,
+      address,
+      image,
     });
     res.sendStatus(201);
   } catch (error) {
@@ -66,6 +71,10 @@ router.post("/login", async (req, res, next) => {
     const payload = {
       _id: foundUser._id,
       email: foundUser.email,
+      firstName: foundUser.firstName,
+      lastName: foundUser.lastName,
+      address: foundUser.address,
+      image: foundUser.image,
       isAdmin: foundUser.isAdmin,
     };
     const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
