@@ -16,4 +16,9 @@ router.use("/comments", commentRoutes);
 const userRoutes = require("./user.routes");
 router.use("/users", userRoutes);
 
+
+const paymentRoutes = require("./payment.routes")
+router.use("/payment", paymentRoutes)
+
+
 module.exports = router;
