@@ -16,16 +16,22 @@ router.post("/", verifyToken, verifyAdmin, async (req, res, next) => {
   }
 });
 
-//Return all products
-router.get("/", (req, res, next) => {
-  Product.find()
-    .then((products) => {
-      res.status(202).json(products);
-    })
+//Return all and filtered products
+router.get("/", async (req, res, next) => {
+  try {
+    const { category } = req.query;
 
-    .catch((error) => {
-      next(error);
-    });
+    let products;
+    if (category) {
+      products = await Product.find({ category });
+    } else {
+      products = await Product.find();
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching products" });
+  }
 });
 
 // return by title
