@@ -15,8 +15,8 @@ const productSchema = new Schema({
   price: {
     type: Number,
     required: [true, "price is required"],
-   set: (value) => (value / 100).toFixed(2),
-   get: (value) => Math.round(value * 100),
+   get: (value) => (value / 100).toFixed(2),
+   set: (value) => Math.round(value * 100),
   },
   image: {
     type: String,
