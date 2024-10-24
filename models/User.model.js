@@ -4,6 +4,11 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
+    googleId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     email: {
       type: String,
       required: [true, "Email is required."],
@@ -13,7 +18,9 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required."],
+      required: function () {
+        return !this.googleId;
+      },
     },
     username: {
       type: String,
@@ -46,7 +53,6 @@ const userSchema = new Schema(
     ],
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );

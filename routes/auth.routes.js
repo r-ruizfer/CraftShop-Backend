@@ -1,11 +1,42 @@
 const router = require("express").Router();
-
+const express = require('express');
+const passport = require('passport');
 const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { verifyToken, verifyAdmin } = require("../middlewares/auth.middlewares");
 
-// POST "/api/auth/signup" => recibe credenciales de usuario y lo crea en la DB
+// Ruta para iniciar sesión con Google
+router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+
+// Ruta de callback para manejar la respuesta de Google
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+  
+    // Autenticación exitosa, redirigir
+    res.redirect('http://localhost:5173/profile');
+  }
+);
+
+// Ruta para cerrar sesión
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+// Ruta para iniciar el proceso de autenticación con Google para login
+router.get('/google/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Ruta de callback que Google llamará después de la autenticación
+router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
+  (req, res) => {
+  
+    res.redirect(`http://localhost:5173/profile`)
+  }
+);
+
+
+// POST "/api/auth/signup" 
 router.post("/signup", async (req, res, next) => {
   console.log(req.body);
   const { email, password, username, firstName, lastName, address, image } =
