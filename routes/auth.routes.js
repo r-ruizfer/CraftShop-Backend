@@ -14,8 +14,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
     
-    // console.log("PATATA", req)
-    //return 
+     
     try {
 
       if (!req.user) {
@@ -36,7 +35,7 @@ router.get(
         algorithm: "HS256",
         expiresIn: "7d",
       });
-      //res.status(200).json({ authToken: authToken });
+    
       res.redirect(`${process.env.ORIGIN}?authToken=${authToken}`)
     } catch (error) {
       next(error)
@@ -44,10 +43,7 @@ router.get(
   }
 );
 
-/*router.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect("/");
-});*/
+
 
 // LOGIN Google
 router.get(
