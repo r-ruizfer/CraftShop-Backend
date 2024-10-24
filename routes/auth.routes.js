@@ -1,42 +1,61 @@
 const router = require("express").Router();
-const express = require('express');
-const passport = require('passport');
+const express = require("express");
+const passport = require("passport");
 const User = require("../models/User.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { verifyToken, verifyAdmin } = require("../middlewares/auth.middlewares");
 
-// Ruta para iniciar sesión con Google
-router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
+// SIGNUP Google
+router.get("/google", passport.authenticate("google", { scope: ["https://www.googleapis.com/auth/userinfo.profile","https://www.googleapis.com/auth/userinfo.email" ] }));
 
-// Ruta de callback para manejar la respuesta de Google
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-  
-    // Autenticación exitosa, redirigir
-    res.redirect('http://localhost:5173/profile');
+    
+    // console.log("PATATA", req)
+    //return 
+    try {
+
+      if (!req.user) {
+        res.status(400).json({ message: "User not found!" });
+        return;
+      }
+
+      const payload = {
+        _id: req.user._id,
+        email: req.user.email,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        address: req.user.address,
+        image: req.user.image,
+        isAdmin: req.user.isAdmin,
+      };
+      const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+        algorithm: "HS256",
+        expiresIn: "7d",
+      });
+      //res.status(200).json({ authToken: authToken });
+      res.redirect(`${process.env.ORIGIN}?authToken=${authToken}`)
+    } catch (error) {
+      next(error)
+    }
   }
 );
 
-// Ruta para cerrar sesión
-router.get('/logout', (req, res) => {
+/*router.get("/logout", (req, res) => {
   req.logout();
-  res.redirect('/');
-});
+  res.redirect("/");
+});*/
 
-// Ruta para iniciar el proceso de autenticación con Google para login
-router.get('/google/login', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-// Ruta de callback que Google llamará después de la autenticación
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-  
-    res.redirect(`http://localhost:5173/profile`)
-  }
+// LOGIN Google
+router.get(
+  "/google/login",
+  passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 
-
-// POST "/api/auth/signup" 
+// POST "/api/auth/signup"
 router.post("/signup", async (req, res, next) => {
   console.log(req.body);
   const { email, password, username, firstName, lastName, address, image } =

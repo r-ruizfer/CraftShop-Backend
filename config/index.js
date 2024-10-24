@@ -11,10 +11,13 @@ function configs(app) {
         "http://localhost:5174",
         "http://localhost:5173",
         "http://localhost:5000",
-
       ],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      credentials: true
     })
   );
+
+  app.options("*", cors())
   // ...
   app.use(express.json());
   app.use(morgan("dev"));

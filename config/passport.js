@@ -8,13 +8,14 @@ passport.use(new GoogleStrategy({
 },
 async (accessToken, refreshToken, profile, done) => {
   try {
-    // Busca o crea el usuario en tu base de datos
+  //console.log(profile)
+  console.log("ën ruta passport")
     let user = await User.findOne({ googleId: profile.id });
     if (!user) {
       user = await new User({
         googleId: profile.id,
         username: profile.displayName,
-        email: profile.emails[0].value
+        email: profile.email || profile.emails[0].value
       }).save();
     }
     done(null, user);
@@ -22,10 +23,11 @@ async (accessToken, refreshToken, profile, done) => {
     done(error, false);
   }
 }));
-// Serialización y deserialización del usuario
+
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
   try {
+    console.log("ën ruta passport deserialized")
     const user = await User.findById(id);
     done(null, user);
   } catch (error) {
