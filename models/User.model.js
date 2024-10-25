@@ -6,7 +6,7 @@ const userSchema = new Schema(
   {
     googleId: {
       type: String,
-      required: true,
+
       unique: true,
     },
     email: {
@@ -39,7 +39,7 @@ const userSchema = new Schema(
     image: {
       type: String,
       default:
-        "https://static.wikia.nocookie.net/joke-battles/images/d/df/Gigachad.png/revision/latest?cb=20230812064835",
+        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     },
     isAdmin: {
       type: Boolean,
